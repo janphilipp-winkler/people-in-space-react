@@ -1,70 +1,204 @@
-# Getting Started with Create React App
+<img src="1.jpg" />
+<img src="2.jpg" />
+<img src="3.jpg" />
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Challenges: Self Directed Learning 5
 
-## Available Scripts
+## 📡 People in Space - React Style 🚀
 
-In the project directory, you can run:
+> Required Sessions:
+>
+> - React Basics
+> - React State 1-3
+> - React useEffect with Fetch
 
-### `npm start`
+Let's build a website that displays the current number of people in space (again!). Hints are provided if you get stuck. Try to build as much as possible without looking at the hints. We will use the [following API](http://open-notify.org/Open-Notify-API/People-In-Space/) to determine how many people are current in space.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1.  Create a new React project using `create-react-app`. `cd` into the new directory that get's created and don't forget to install the packages.
+     <details>
+     <summary>🙈 Hint</summary>
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    ```bash
+    npx create-react-app people-in-space-react
+    cd people-in-space-react
+    npm i
 
-### `npm test`
+    ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    </details>
+    &nbsp;
 
-### `npm run build`
+2.  Start the dev server
+       <details>
+       <summary>🙈 Hint</summary>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    ```bash
+    npm run start
+    ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    </details>
+    &nbsp;
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3.  Add an element to the html where we will put the number of people currently in space. We probably want to keep track of the number of people in space via state (try and think of a good react hook for this). We can set the initial value to 0 for now.
+    <details>
+    <summary>🙈 Hint</summary>
 
-### `npm run eject`
+    ```js
+    import { useState } from "react";
+    import "./App.css";
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+    function App() {
+      const [numberInSpace, setNumberInSpace] = useState(0);
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+      return (
+        <main>
+          <h1>People in Space: {numberInSpace}</h1>
+        </main>
+      );
+    }
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+    export default App;
+    ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+     </details>
+     &nbsp;
 
-## Learn More
+4.  Now we want to fetch the data from the api. There is another hook from React that we want to think about here. Fetching data from an external source can be seen as a side effect. Once you have fetched the data don't forget to call `setPeopleInSpace`
+    <details>
+    <summary>🙈 Hint</summary>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    ```js
+    import { useEffect, useState } from "react";
+    import "./App.css";
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    function App() {
+      const [numberInSpace, setNumberInSpace] = useState(0);
 
-### Code Splitting
+      useEffect(() => {
+        async function fetchPeopleInSpace() {
+          const response = await fetch(
+            "http://api.open-notify.org/astros.json"
+          );
+          const data = await response.json();
+          setNumberInSpace(data.number);
+        }
+        fetchPeopleInSpace();
+      }, []);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+      return (
+        <main>
+          <h1>People in Space: {numberInSpace}</h1>
+        </main>
+      );
+    }
 
-### Analyzing the Bundle Size
+    export default App;
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+    </details>
+    &nbsp;
 
-### Making a Progressive Web App
+Congratulations! You have now made a website that shows the current number of people in space using React. Compare this with the `people in space` project you worked on last week.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+As a **_bonus_** feature you could add a `ul` to the page that gets updated with the names of the people currently in space (this information is also included in the response from the API). You will probably want to create another state variable. Then we need to remember how to loop over an array in React.
 
-### Advanced Configuration
+  <details>
+  <summary>🙈 Hint</summary>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```js
+import { useEffect, useState } from "react";
+import "./App.css";
 
-### Deployment
+function App() {
+  const [numberInSpace, setNumberInSpace] = useState(0);
+  const [peopleInSpace, setPeopleInSpace] = useState([]);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+  useEffect(() => {
+    async function fetchPeopleInSpace() {
+      const response = await fetch("http://api.open-notify.org/astros.json");
+      const data = await response.json();
+      setNumberInSpace(data.number);
+      setPeopleInSpace(data.people);
+    }
+    fetchPeopleInSpace();
+  }, []);
 
-### `npm run build` fails to minify
+  return (
+    <main>
+      <h1>People in Space: {numberInSpace}</h1>
+      {peopleInSpace.length > 0 && (
+        <ul>
+          {peopleInSpace.map((person) => (
+            <li key={person.name}>{person.name}</li>
+          ))}
+        </ul>
+      )}
+    </main>
+  );
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+export default App;
+```
+
+  </details>
+      &nbsp;
+
+As an **_extra bonus_** you could add 3 buttons to the page. `All`, `ISS` and `Tiangong`. Then when you click on one of the buttons you update the list of people displayed on the page based on which space craft they are on. i.e. if you click on the ISS button, your list of people should only include those on the `ISS`. We learnt about an array method that would be particularly helpful in this scenario.
+
+  <details>
+  <summary>🙈 Hint</summary>
+
+There are several ways we could achieve this. Here is one possible solution.
+
+```js
+import { useEffect, useState } from "react";
+import "./App.css";
+
+function App() {
+  const [numberInSpace, setNumberInSpace] = useState(0);
+  const [peopleInSpace, setPeopleInSpace] = useState([]);
+  const [activeCraft, setActiveCraft] = useState("All");
+
+  useEffect(() => {
+    async function fetchPeopleInSpace() {
+      const response = await fetch("http://api.open-notify.org/astros.json");
+      const data = await response.json();
+      setNumberInSpace(data.number);
+      setPeopleInSpace(data.people);
+    }
+    fetchPeopleInSpace();
+  }, []);
+
+  const filteredPeople =
+    activeCraft === "All"
+      ? peopleInSpace
+      : peopleInSpace.filter((person) => person.craft === activeCraft);
+
+  return (
+    <main>
+      <h1>People in Space: {numberInSpace}</h1>
+      <h2>Craft: {activeCraft}</h2>
+      <button type="button" onClick={() => setActiveCraft("All")}>
+        All
+      </button>
+      <button type="button" onClick={() => setActiveCraft("ISS")}>
+        ISS
+      </button>
+      <button type="button" onClick={() => setActiveCraft("Tiangong")}>
+        Tiangong
+      </button>
+      {filteredPeople.length > 0 && (
+        <ul>
+          {filteredPeople.map((person) => (
+            <li key={person.name}>{person.name}</li>
+          ))}
+        </ul>
+      )}
+    </main>
+  );
+}
+
+export default App;
+```
+
+  </details>
